@@ -3,8 +3,10 @@ const app = express();
 import colors from 'colors'
 import mongoose from 'mongoose';
 import dotenv from 'dotenv'
-import userRouter from './routes/user.route.js';
 dotenv.config()
+import userRouter from './routes/user.route.js';
+import authRouter from './routes/auth.route.js';
+
 
 
 mongoose.connect(process.env.DATABASE_URL)
@@ -15,8 +17,12 @@ db.on('connected', () => console.log('DATABASE is connected...'))
 db.on('disconnected', () => console.log('DB is disconnected'))
 db.on('error', (err) => console.log(err.message + ' is DATABASE configured correctly?'))
 
+//Middleware...
+app.use(express.urlencoded({ extended: true }))
+
 //Routes...
-app.use('/api/v1', userRouter)
+app.use('/api/user', userRouter)
+app.use('/api/auth', authRouter)
 
 
 app.listen(3000, () => {
